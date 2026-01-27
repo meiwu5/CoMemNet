@@ -1,7 +1,7 @@
 ## DCS-MR
 ![model](https://github.com/user-attachments/assets/8bd068bd-9e94-4b40-a267-360f2c0ed69d)
 ### Dataset
-The dataset is obtained from : [[https://drive.google.com/file/d/1u6gUe59aomRhT9pe5meRhSTiVtxkNfc1/view?usp=drive_link](https://drive.google.com/file/d/1SjsMsZIIWdKxzKxySROnb4Z84t1mZXXU/view?usp=drive_link)](https://drive.google.com/file/d/1SjsMsZIIWdKxzKxySROnb4Z84t1mZXXU/view?usp=drive_link)
+The dataset is obtained from : [https://drive.google.com/file/d/1SjsMsZIIWdKxzKxySROnb4Z84t1mZXXU/view?usp=drive_link](https://drive.google.com/file/d/1SjsMsZIIWdKxzKxySROnb4Z84t1mZXXU/view?usp=drive_link)
 
 Make sure to place it in the **data** directory.
 
