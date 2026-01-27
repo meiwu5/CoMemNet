@@ -1,4 +1,4 @@
-## DCS-MR
+## CoMemNet
 ![model](https://github.com/user-attachments/assets/8bd068bd-9e94-4b40-a267-360f2c0ed69d)
 ### Dataset
 The dataset is obtained from : [https://drive.google.com/file/d/1SjsMsZIIWdKxzKxySROnb4Z84t1mZXXU/view?usp=drive_link](https://drive.google.com/file/d/1SjsMsZIIWdKxzKxySROnb4Z84t1mZXXU/view?usp=drive_link)
@@ -10,8 +10,8 @@ If you need to repeat the baseline experiment:
 place the data in **/baseline/TrafficStream-main/data** or **/baseline/STKEC-main/data**, set data_process to 1 in the config.
 ### Run Code
 ```
-conda create -n DCS-MR pythom==3.12
-conda activate DCS-MR
+conda create -n CoMemNet pythom==3.12
+conda activate CoMemNet
 pip install -r requirements.txt
 sh run.sh
 ```
