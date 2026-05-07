@@ -1,62 +1,157 @@
-## CoMemNet
-![model](https://github.com/user-attachments/assets/8bd068bd-9e94-4b40-a267-360f2c0ed69d)
-### Dataset
-The dataset is obtained from : [https://drive.google.com/file/d/1SjsMsZIIWdKxzKxySROnb4Z84t1mZXXU/view?usp=drive_link](https://drive.google.com/file/d/1SjsMsZIIWdKxzKxySROnb4Z84t1mZXXU/view?usp=drive_link)
+# CoMemNet: Contrastive Sampling with Memory Replay Network for Continual Traffic Prediction
 
-Make sure to place it in the **data** directory.
+> **Mei Wu, Wenchao Weng, Wenxin Su, Wenjie Tang, Wei Zhou**
+>
 
-If you need to repeat the baseline experiment:
+[![arXiv](https://img.shields.io/badge/arXiv-paper-b31b1b.svg)](https://arxiv.org/abs/YOUR_ARXIV_ID)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
 
-place the data in **/baseline/TrafficStream-main/data** or **/baseline/STKEC-main/data**, set data_process to 1 in the config.
-### Run Code
+---
+
+## Overview
+
+Traffic networks in the real world continuously expand and evolve — new roads are added, sensor distributions shift, and traffic patterns drift over time. Most existing spatio-temporal models assume a **static graph structure** and fail to adapt to these changes, leading to catastrophic forgetting and poor long-term performance.
+
+**CoMemNet** is a simple yet efficient **dual-branch continual learning framework** for traffic prediction on expanding road networks. It addresses three core challenges:
+
+- 🗺️ **Feature extraction under dynamic topology** — via an embedding-based backbone requiring no explicit graph input
+- 🧠 **Catastrophic forgetting under spatio-temporal drift** — via a momentum-updated dual-branch contrastive mechanism
+- 💾 **Memory explosion in incremental graphs** — via a lightweight Node-Adaptive Temporal Memory Replay Buffer (TMRB-N)
+
+![CoMemNet Architecture](https://github.com/user-attachments/assets/8bd068bd-9e94-4b40-a267-360f2c0ed69d)
+
+---
+
+## Key Contributions
+
+- **Embedding-based Backbone** — no explicit graph structure input or generation required, enabling seamless adaptation to incremental node/edge additions
+- **Dual-Branch Contrastive Framework** — an Online Branch for fast convergence and a momentum-updated Target Branch for stable historical knowledge retention
+- **DC Sampler (Dynamic Contrastive Sampler)** — uses Wasserstein Distance to identify nodes with significant distribution shifts, implementing a curriculum-style hard-example-first training strategy
+- **TMRB-N (Node-Adaptive Temporal Memory Replay Buffer)** — lightweight gated memory module that stores and updates only key node representations, avoiding memory explosion
+- **Two new open-source datasets** — PEMSD4(L) and PEMSD8(M), covering Bay Area and Southern California traffic networks over multiple years
+
+---
+
+## Results
+
+CoMemNet achieves **state-of-the-art performance** on three large-scale real-world datasets across all temporal granularities (15 / 30 / 60 min), while training on only **15–30% of nodes** in later years and achieving the **fastest training speed** among all continual learning baselines.
+
+| Dataset | MAE (60min) | RMSE (60min) | MAPE (60min) | Avg. Time (s/epoch) |
+|---------|-------------|--------------|--------------|----------------------|
+| PEMSD3(S) | **13.57** | **22.94** | **18.80** | **0.30** |
+| PEMSD4(L) | **22.00** | **37.38** | **15.86** | **0.65** |
+| PEMSD8(M) | **17.03** | **28.41** | **17.82** | **0.23** |
+
+---
+
+## Repository Structure
+
 ```
-conda create -n CoMemNet pythom==3.12
+CoMemNet/
+├── main.py              # Main training & evaluation entry point
+├── run.sh               # Quick-start shell script
+├── requirements.txt     # Python dependencies
+├── config/              # Dataset-specific configuration files
+├── src/                 # Core model implementation (CoMemNet, DC Sampler, TMRB-N)
+├── baseline/            # Baseline models (TrafficStream, STKEC, etc.)
+├── distance/            # Wasserstein distance computation utilities
+├── embedding/           # Node embedding modules
+└── utils/               # Data loading, preprocessing, evaluation helpers
+```
+
+---
+
+## Getting Started
+
+### 1. Environment Setup
+
+```bash
+conda create -n CoMemNet python==3.12
 conda activate CoMemNet
 pip install -r requirements.txt
+```
+
+### 2. Data Preparation
+
+Download the datasets from Google Drive:
+
+📦 **Dataset & Pre-run Logs**: [Google Drive](https://drive.google.com/file/d/1SjsMsZIIWdKxzKxySROnb4Z84t1mZXXU/view?usp=drive_link)
+
+Place the data in the `data/` directory:
+```
+CoMemNet/
+└── data/
+    ├── PEMSD3/
+    ├── PEMSD4/
+    └── PEMSD8/
+```
+
+For baseline experiments, place data in:
+- `/baseline/TrafficStream-main/data/`
+- `/baseline/STKEC-main/data/`
+
+Then set `data_process: 1` in the config to generate `FastData`.
+
+### 3. Run
+
+```bash
 sh run.sh
 ```
 
-### Run Logs:
+Run logs are saved to the `res/` folder.
 
-The run logs are saved in the res folder.
+---
 
-Previously executed res files: [https://drive.google.com/file/d/1SjsMsZIIWdKxzKxySROnb4Z84t1mZXXU/view?usp=drive_link](https://drive.google.com/file/d/1SjsMsZIIWdKxzKxySROnb4Z84t1mZXXU/view?usp=drive_link)
+## Configuration Guide
 
-### Important Parameters in `config`
+Key parameters in the `config/` files:
 
-- **`data_process`:**  
-  - `1`: Generate `FastData`.  
-  - `0`: Use existing data directly without generating `FastData`.
+| Parameter | Values | Description |
+|-----------|--------|-------------|
+| `data_process` | `1` / `0` | `1`: generate FastData; `0`: use existing data |
+| `auto_test` | `1` / `0` | `1`: train model; `0`: inference only with saved weights |
+| `auto_lr` | `1` / `0` | Enable automatic learning rate scheduling |
+| `increase` | `true` / `false` | Include newly added nodes (Vτ \ Vτ₋₁) in training |
+| `replay` | `true` / `false` | Enable DC Sampler memory replay |
+| `replay_ratio` | float (e.g. `0.05`) | Proportion ρ of replayed nodes relative to total nodes |
+| `replay_strategy` | `"feature"` | Use Target branch for node feature extraction |
+| `num_hops` | int (e.g. `2`) | Neighborhood hops used by the sampler |
+| `is_TMRB` | `true` / `false` | Enable TMRB-N temporal memory replay buffer |
+| `is_update` | `true` / `false` | Enable temporal feature update within TMRB-N |
+| `select_k` | `true` / `false` | `true`: Top-K feature difference selection; `false`: random selection |
 
-- **`auto_test`:**  
-  - `1`: Perform training.  
-  - `0`: Skip training and directly use the parameter file for inference.
+### Recommended Hyperparameters
 
-- **`auto_lr`:**  
-  - `1`: Enable automatic learning rate adjustment.
+| Dataset | Batch Size | LR | Epochs | Momentum (β) | LR Decay | ρ |
+|---------|------------|----|--------|--------------|----------|---|
+| PEMSD3(S) | 128 | 0.01 | 50 | 0.99 | 0.5 | 0.05 |
+| PEMSD4(L) | 128 | 0.01 | 50 | 0.99 | 0.5 | 0.03 |
+| PEMSD8(M) | 128 | 0.01 | 60 | 0.99 | 0.5 | 0.05 |
 
-- **`increase`:**  
-  - `true`: Include nodes with increasing $v_\tau/v_{\tau-1}$ values.
+---
 
-- **`num_hops`:**  
-  - `2`: Indicates that the sampler selects a two-hop neighborhood of nodes.
+## Datasets
 
-- **`replay`:**  
-  - `true`: Use DC Sampler to replay nodes.
+| Dataset | Years | Max Nodes | Max Edges | Region |
+|---------|-------|-----------|-----------|--------|
+| PEMSD3(S) | 2011–2017 | 871 | 2,788 | Public |
+| PEMSD4(L) | 2009–2015 | 2,406 | 9,773 | Bay Area, CA *(new)* |
+| PEMSD8(M) | 2012–2018 | 320 | 1,089 | Southern CA *(new)* |
 
-- **`replay_strategy`:**  
-  - `"feature"`: Use the Target branch for feature extraction of nodes.
+All datasets are sourced from the [CalTrans PeMS system](https://pems.dot.ca.gov/), sampled every 30 seconds and aggregated into 5-minute intervals. Sensors are filtered by missing rate (<10%), geographic coherence (State Post-Mile < 100), and temporal continuity across years.
 
-- **`replay_ratio`:**  
-  - Represents the proportion of replayed nodes relative to the total number of current nodes.
+---
 
-- **`is_TMRB`:**  
-  - `true`: Enable TMRB (Temporal Memory Replay Buffer).
+## Acknowledgements
 
-- **`is_update`:**  
-  - `true`: Update features within TMRB.
+We thank the authors of [TrafficStream](https://github.com/AprLie/TrafficStream) and [STKEC](https://github.com/bwang-ustc/STKEC) for open-sourcing their baseline implementations.
 
-- **`select_k`:**  
-  - `true`: Select nodes using the Top-K difference in features.  
-  - `false`: Select nodes randomly.
+---
 
+## Contact
+
+For questions or issues, feel free to open a GitHub Issue or contact:
+
+- **Mei Wu** — wumei5@sjtu.edu.cn *(Shanghai Jiao Tong University)*
+- **Wenchao Weng** — 111124120010@zjut.edu.cn *(Zhejiang University of Technology)*
