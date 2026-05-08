@@ -3,7 +3,7 @@
 > **Mei Wu, Wenchao Weng, Wenxin Su, Wenjie Tang, Wei Zhou**
 >
 
-[![arXiv](https://img.shields.io/badge/arXiv-paper-b31b1b.svg)](https://arxiv.org/abs/YOUR_ARXIV_ID)
+[![arXiv](https://img.shields.io/badge/arXiv-paper-b31b1b.svg)](https://arxiv.org/pdf/2605.05738)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
 
@@ -145,7 +145,7 @@ All datasets are sourced from the [CalTrans PeMS system](https://pems.dot.ca.gov
 
 ## Acknowledgements
 
-We thank the authors of [TrafficStream](https://github.com/AprLie/TrafficStream) and [STKEC](https://github.com/bwang-ustc/STKEC) for open-sourcing their baseline implementations.
+We thank the authors of [TrafficStream](https://github.com/AprLie/TrafficStream) and [STKEC](https://github.com/UnderReview24/STKEC) for open-sourcing their baseline implementations.
 
 ---
 
