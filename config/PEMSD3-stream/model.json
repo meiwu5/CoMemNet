@@ -13,7 +13,7 @@
     "train": 1,
     "y_len": 12,
     "x_len": 12,
-    "data_process": 0,
+    "data_process": 1,
     "auto_test": 1,
     "auto_lr":1,
     "raw_data_path": "data/PEMSD3-stream/finaldata/",
@@ -49,10 +49,10 @@
     "init": true,
     "increase": true,
     "num_hops": 2,
-    
+
     "replay": true,
     "replay_strategy": "feature",
-    "replay_ratio":0.2,
+    "replay_ratio":0.05,
 
     "is_TMRB":true,
     "is_update":true,

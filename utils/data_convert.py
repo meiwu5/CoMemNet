@@ -21,7 +21,7 @@ def MinMaxnormalization(train, val, test):
     train_norm, val_norm, test_norm: np.ndarray,
                                      shape is the same as original
     '''
-    
+
     assert train.shape[1:] == val.shape[1:] and val.shape[1:] == test.shape[1:]  # ensure the num of nodes is the same
 
     _max = train.max(axis=(0, 1, 3), keepdims=True)
@@ -57,7 +57,7 @@ def generate_dataset(
         day_in_week = np.array(day_in_week)
         day_in_week = np.tile(day_in_week, [1, num_nodes, 1]).transpose((2, 1, 0))
         feature_list.append(day_in_week)
-        
+
     data = np.concatenate(feature_list, axis=-1)
     x, y = [], []
     min_t = abs(min(x_offsets))
@@ -99,7 +99,7 @@ def generate_samples(days, savepath, data, graph,train_rate=0.6, val_rate=0.2, t
         y[num_train: num_train + num_val][..., 0:1],
     )
     test_x, test_y = x[-num_test:], y[-num_test:][..., 0:1]
-    
+
     # =========== Do it for minmaxnorm ============ #
     train_x_norm = train_x[:, :, :, :num_feat]
     train_x_time = train_x[:, :, :, num_feat:]

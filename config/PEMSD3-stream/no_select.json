@@ -49,10 +49,10 @@
     "init": true,
     "increase": true,
     "num_hops": 2,
-    
+
     "replay": true,
     "replay_strategy": "feature",
-    "replay_ratio":0.2,
+    "replay_ratio":0.05,
 
     "is_TMRB":true,
     "is_update":true,

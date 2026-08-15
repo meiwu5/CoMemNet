@@ -1,8 +1,29 @@
-.ipynb_checkpoints
-data
-res
-README.md
-__pycache__
+.ipynb_checkpoints/
+__pycache__/
+*.py[cod]
 *DS_Store
-.vscode
-.history
+.vscode/
+.history/
+
+# Datasets, generated scale subsets, checkpoints, and experiment outputs.
+data/*
+!data/read_data.py
+res/
+*.pt
+*.pth
+*.pkl
+*.ckpt
+
+# Third-party repositories are installed with scripts/setup_external_baselines.sh.
+baseline/*-official/
+baseline/*-main/
+baseline/EAC-data/
+
+# LaTex and local runtime artifacts.
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz
+texput.log

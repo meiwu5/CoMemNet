@@ -43,7 +43,7 @@ class DataLoader(object):
                 self.current_ind += 1
 
         return _wrapper()
-    
+
 class Cotinual_learning_DataLoader(object):
     def __init__(self, xs, batch_size, shuffle=True, pad_with_last_sample=True):
         self.batch_size = batch_size
@@ -79,4 +79,51 @@ class Cotinual_learning_DataLoader(object):
                 yield {'x': x_i}
                 self.current_ind += 1
 
+        return _wrapper()
+
+class AllHistoryDataLoader(object):
+    """Stream yearly NPZ training splits and pad unavailable old nodes per batch."""
+    def __init__(self, paths, node_count, batch_size, shuffle=True, device='cuda:0'):
+        self.paths = list(paths)
+        self.node_count = int(node_count)
+        self.batch_size = int(batch_size)
+        self.shuffle_data = bool(shuffle)
+        self.device = device
+        self.num_batch = 0
+        for path in self.paths:
+            with np.load(path, allow_pickle=True) as data:
+                self.num_batch += int(np.ceil(len(data['train_x']) / self.batch_size))
+
+    def __len__(self):
+        return self.num_batch
+
+    def _pad_nodes(self, array):
+        if array.shape[2] == self.node_count:
+            return array
+        if array.shape[2] > self.node_count:
+            return array[:, :, :self.node_count, :]
+        shape = list(array.shape)
+        shape[2] = self.node_count - array.shape[2]
+        return np.concatenate([array, np.zeros(shape, dtype=array.dtype)], axis=2)
+
+    def get_iterator(self):
+        def _wrapper():
+            paths = list(self.paths)
+            if self.shuffle_data:
+                np.random.shuffle(paths)
+            for path in paths:
+                with np.load(path, allow_pickle=True) as data:
+                    xs, ys = data['train_x'], data['train_y']
+                    indices = np.arange(len(xs))
+                    if self.shuffle_data:
+                        np.random.shuffle(indices)
+                    for start in range(0, len(indices), self.batch_size):
+                        batch_indices = indices[start:start + self.batch_size]
+                        if len(batch_indices) < self.batch_size:
+                            batch_indices = np.pad(batch_indices, (0, self.batch_size-len(batch_indices)),
+                                                   mode='edge')
+                        x = self._pad_nodes(xs[batch_indices])
+                        y = self._pad_nodes(ys[batch_indices])
+                        yield {'x': torch.as_tensor(x, dtype=torch.float32, device=self.device),
+                               'y': torch.as_tensor(y, dtype=torch.float32, device=self.device)}
         return _wrapper()

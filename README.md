@@ -1,157 +1,249 @@
-# CoMemNet: Contrastive Sampling with Memory Replay Network for Continual Traffic Prediction
+# CoMemNet
 
-> **Mei Wu, Wenchao Weng, Wenxin Su, Wenjie Tang, Wei Zhou**
->
+[中文说明](README_zh.md)
 
-[![arXiv](https://img.shields.io/badge/arXiv-paper-b31b1b.svg)](https://arxiv.org/pdf/2605.05738)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
+CoMemNet is a continual traffic forecasting framework for evolving sensor networks. It combines an adjacency-free prediction backbone, online/EMA-target branches, drift-aware node selection, topology-assisted local updates, and a Node-Adaptive Temporal Memory Replay Buffer (TMRB-N).
 
----
+This repository also contains the major-revision experiment suite under `config/reviewer/` and `scripts/`. The suite evaluates controlled replay selectors, target-branch and momentum ablations, contrastive-loss variants, graph-dependency variants, continual-learning retention, and computational/storage costs.
 
-## Overview
+## Release Resources
 
-Traffic networks in the real world continuously expand and evolve — new roads are added, sensor distributions shift, and traffic patterns drift over time. Most existing spatio-temporal models assume a **static graph structure** and fail to adapt to these changes, leading to catastrophic forgetting and poor long-term performance.
+- Processed datasets and data-processing documentation: `[DATASET_GOOGLE_DRIVE_URL]`
+- Major-revision checkpoints, logs, configurations, and result summaries: `[REVISION_ARTIFACTS_GOOGLE_DRIVE_URL]`
 
-**CoMemNet** is a simple yet efficient **dual-branch continual learning framework** for traffic prediction on expanding road networks. It addresses three core challenges:
+This Git repository intentionally excludes datasets, generated scale subsets, model weights, logs, and experiment outputs. `PEMSD3-stream` uses the public evolving-network release cited in the manuscript. `PEMSD4(L)` and `PEMSD8(M)` are processed from public CalTrans PeMS records; their processed data and documentation are provided through the dataset link above.
 
-- 🗺️ **Feature extraction under dynamic topology** — via an embedding-based backbone requiring no explicit graph input
-- 🧠 **Catastrophic forgetting under spatio-temporal drift** — via a momentum-updated dual-branch contrastive mechanism
-- 💾 **Memory explosion in incremental graphs** — via a lightweight Node-Adaptive Temporal Memory Replay Buffer (TMRB-N)
+## Repository layout
 
-![CoMemNet Architecture](https://github.com/user-attachments/assets/8bd068bd-9e94-4b40-a267-360f2c0ed69d)
-
----
-
-## Key Contributions
-
-- **Embedding-based Backbone** — no explicit graph structure input or generation required, enabling seamless adaptation to incremental node/edge additions
-- **Dual-Branch Contrastive Framework** — an Online Branch for fast convergence and a momentum-updated Target Branch for stable historical knowledge retention
-- **DC Sampler (Dynamic Contrastive Sampler)** — uses Wasserstein Distance to identify nodes with significant distribution shifts, implementing a curriculum-style hard-example-first training strategy
-- **TMRB-N (Node-Adaptive Temporal Memory Replay Buffer)** — lightweight gated memory module that stores and updates only key node representations, avoiding memory explosion
-- **Two new open-source datasets** — PEMSD4(L) and PEMSD8(M), covering Bay Area and Southern California traffic networks over multiple years
-
----
-
-## Results
-
-CoMemNet achieves **state-of-the-art performance** on three large-scale real-world datasets across all temporal granularities (15 / 30 / 60 min), while training on only **15–30% of nodes** in later years and achieving the **fastest training speed** among all continual learning baselines.
-
-| Dataset | MAE (60min) | RMSE (60min) | MAPE (60min) | Avg. Time (s/epoch) |
-|---------|-------------|--------------|--------------|----------------------|
-| PEMSD3(S) | **13.57** | **22.94** | **18.80** | **0.30** |
-| PEMSD4(L) | **22.00** | **37.38** | **15.86** | **0.65** |
-| PEMSD8(M) | **17.03** | **28.41** | **17.82** | **0.23** |
-
----
-
-## Repository Structure
-
-```
+```text
 CoMemNet/
-├── main.py              # Main training & evaluation entry point
-├── run.sh               # Quick-start shell script
-├── requirements.txt     # Python dependencies
-├── config/              # Dataset-specific configuration files
-├── src/                 # Core model implementation (CoMemNet, DC Sampler, TMRB-N)
-├── baseline/            # Baseline models (TrafficStream, STKEC, etc.)
-├── distance/            # Wasserstein distance computation utilities
-├── embedding/           # Node embedding modules
-└── utils/               # Data loading, preprocessing, evaluation helpers
+├── main.py                         # training and continual evaluation entry point
+├── src/model/                      # backbone, TMRB, and replay selection
+├── utils/                          # data loading, preprocessing, and metrics
+├── config/                         # main, ablation, parameter, and reviewer configs
+├── data/                           # yearly traffic data, graphs, and cached splits
+├── baseline/                       # baseline implementations
+├── scripts/
+│   ├── generate_reviewer_configs.py
+│   ├── run_reviewer_experiments.sh
+│   └── aggregate_reviewer_results.py
+├── paper/CoMemNet/                 # manuscript source and figures
+└── paper/reviewer/                 # reviewer comments and revision plan
 ```
 
----
+## Requirements
 
-## Getting Started
-
-### 1. Environment Setup
+Python 3.10 or newer is recommended. Install the pinned dependencies with:
 
 ```bash
-conda create -n CoMemNet python==3.12
-conda activate CoMemNet
 pip install -r requirements.txt
 ```
 
-### 2. Data Preparation
-
-Download the datasets from Google Drive:
-
-📦 **Dataset & Pre-run Logs**: [Google Drive](https://drive.google.com/file/d/1SjsMsZIIWdKxzKxySROnb4Z84t1mZXXU/view?usp=drive_link)
-
-Place the data in the `data/` directory:
-```
-CoMemNet/
-└── data/
-    ├── PEMSD3/
-    ├── PEMSD4/
-    └── PEMSD8/
-```
-
-For baseline experiments, place data in:
-- `/baseline/TrafficStream-main/data/`
-- `/baseline/STKEC-main/data/`
-
-Then set `data_process: 1` in the config to generate `FastData`.
-
-### 3. Run
+An equivalent Conda definition is provided in `environment.yml`:
 
 ```bash
-sh run.sh
+conda env create -f environment.yml
+conda activate comemnet
 ```
 
-Run logs are saved to the `res/` folder.
+The main dependencies are PyTorch 2.7.1 or newer, PyTorch Geometric 2.6.1, NumPy, SciPy, pandas, NetworkX, and scikit-learn. Install a PyTorch build compatible with the local CUDA driver when using a GPU.
 
----
+For an RTX 5090 or another Blackwell GPU with compute capability `sm_120`, install a CUDA 12.8+ wheel explicitly before installing the remaining dependencies:
 
-## Configuration Guide
+```bash
+pip install --upgrade torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128
+pip install -r requirements.txt
+```
 
-Key parameters in the `config/` files:
+PyTorch 2.5.x CUDA 12.4 wheels do not contain `sm_120` kernels and will fail with `no kernel image is available for execution on the device`.
 
-| Parameter | Values | Description |
-|-----------|--------|-------------|
-| `data_process` | `1` / `0` | `1`: generate FastData; `0`: use existing data |
-| `auto_test` | `1` / `0` | `1`: train model; `0`: inference only with saved weights |
-| `auto_lr` | `1` / `0` | Enable automatic learning rate scheduling |
-| `increase` | `true` / `false` | Include newly added nodes (Vτ \ Vτ₋₁) in training |
-| `replay` | `true` / `false` | Enable DC Sampler memory replay |
-| `replay_ratio` | float (e.g. `0.05`) | Proportion ρ of replayed nodes relative to total nodes |
-| `replay_strategy` | `"feature"` | Use Target branch for node feature extraction |
-| `num_hops` | int (e.g. `2`) | Neighborhood hops used by the sampler |
-| `is_TMRB` | `true` / `false` | Enable TMRB-N temporal memory replay buffer |
-| `is_update` | `true` / `false` | Enable temporal feature update within TMRB-N |
-| `select_k` | `true` / `false` | `true`: Top-K feature difference selection; `false`: random selection |
+Verify the environment before training:
 
-### Recommended Hyperparameters
+```bash
+python -c "import torch, scipy, pandas; print(torch.__version__, torch.cuda.is_available())"
+```
 
-| Dataset | Batch Size | LR | Epochs | Momentum (β) | LR Decay | ρ |
-|---------|------------|----|--------|--------------|----------|---|
-| PEMSD3(S) | 128 | 0.01 | 50 | 0.99 | 0.5 | 0.05 |
-| PEMSD4(L) | 128 | 0.01 | 50 | 0.99 | 0.5 | 0.03 |
-| PEMSD8(M) | 128 | 0.01 | 60 | 0.99 | 0.5 | 0.05 |
+On Blackwell, verify that `sm_120` is present:
 
----
+```bash
+python -c "import torch; print(torch.__version__, torch.version.cuda, torch.cuda.get_arch_list())"
+```
 
-## Datasets
+## Data layout
 
-| Dataset | Years | Max Nodes | Max Edges | Region |
-|---------|-------|-----------|-----------|--------|
-| PEMSD3(S) | 2011–2017 | 871 | 2,788 | Public |
-| PEMSD4(L) | 2009–2015 | 2,406 | 9,773 | Bay Area, CA *(new)* |
-| PEMSD8(M) | 2012–2018 | 320 | 1,089 | Southern CA *(new)* |
+The code expects seven yearly periods for each dataset:
 
-All datasets are sourced from the [CalTrans PeMS system](https://pems.dot.ca.gov/), sampled every 30 seconds and aggregated into 5-minute intervals. Sensors are filtered by missing rate (<10%), geographic coherence (State Post-Mile < 100), and temporal continuity across years.
+| Dataset | Periods | Nodes in first/last period |
+|---|---:|---:|
+| PEMSD3-stream | 2011–2017 | 655 / 871 |
+| PEMSD4-large | 2009–2015 | 1118 / 2406 |
+| PEMSD8-mini | 2012–2018 | 216 / 320 |
 
----
+Expected files:
 
-## Acknowledgements
+```text
+data/<dataset>/
+├── finaldata/<year>.npz       # raw yearly tensor, key: x
+├── graph/<year>_adj.npz       # yearly adjacency matrix, key: x
+└── FastData/<year>_30day.npz  # chronological train/val/test cache
+```
 
-We thank the authors of [TrafficStream](https://github.com/AprLie/TrafficStream) and [STKEC](https://github.com/UnderReview24/STKEC) for open-sourcing their baseline implementations.
+The current experiment configs use existing `FastData` artifacts (`data_process: 0`). Set `data_process` to `1` only when the cache must be regenerated; these files can require several GB per period.
 
----
+The D4 scale subsets used in the major revision are generated locally rather than downloaded separately:
 
-## Contact
+```bash
+python scripts/prepare_scaling_datasets.py \
+  --source PEMSD4-large \
+  --ratios 0.25 0.50 0.75
+```
 
-For questions or issues, feel free to open a GitHub Issue or contact:
+## External baseline setup
 
-- **Mei Wu** — wumei5@sjtu.edu.cn *(Shanghai Jiao Tong University)*
-- **Wenchao Weng** — 111124120010@zjut.edu.cn *(Zhejiang University of Technology)*
+Third-party baseline repositories and their datasets are not vendored. To install the pinned source revisions needed by the corresponding experiment scripts, run:
+
+```bash
+bash scripts/setup_external_baselines.sh
+```
+
+This installs STID, STAEformer, EAC, and PDFormer under `baseline/` at the revisions used for this release.
+
+## Basic training
+
+Run CoMemNet on one dataset:
+
+```bash
+python main.py \
+  --conf config/PEMSD3-stream/model.json \
+  --dataset PEMSD3-stream \
+  --gpuid 0 \
+  --seed 0
+```
+
+Other datasets:
+
+```bash
+python main.py --conf config/PEMSD4-large/model.json --dataset PEMSD4-large --gpuid 0 --seed 0
+python main.py --conf config/PEMSD8-mini/model.json --dataset PEMSD8-mini --gpuid 0 --seed 0
+```
+
+Use `--gpuid -1` for CPU execution, although full experiments are intended for a CUDA GPU.
+
+The standard configs include `static.json`, `retrained.json`, `no_TMRB.json`, `no_update.json`, `no_select.json`, `no_replay.json`, and `no_increase.json` for each dataset.
+
+## Major-revision experiments
+
+Regenerate the reviewer-facing configurations after changing their template:
+
+```bash
+python scripts/generate_reviewer_configs.py
+```
+
+Run a quick one-seed pass:
+
+```bash
+GPU_ID=0 SEEDS="0" bash scripts/run_reviewer_experiments.sh
+```
+
+Run the full three-seed suite:
+
+```bash
+GPU_ID=0 SEEDS="0 1 2" bash scripts/run_reviewer_experiments.sh
+```
+
+Resume mode is enabled by default. Re-running the command scans structured summaries and skips every completed dataset/variant/seed combination. An interrupted variant restarts from its first period because checkpoint-level resume within a run is not implemented. Use `RESUME=0` to intentionally repeat all experiments:
+
+```bash
+GPU_ID=0 SEEDS="0" RESUME=0 bash scripts/run_reviewer_experiments.sh
+```
+
+A single variant can be run independently. For example:
+
+```bash
+python main.py \
+  --conf config/reviewer/PEMSD3-stream/sampler_feature.json \
+  --dataset PEMSD3-stream \
+  --gpuid 0 \
+  --seed 0
+```
+
+Important experiment groups include:
+
+- sampler controls: `sampler_feature`, `sampler_random`, `sampler_recency`, `sampler_high_error`, `sampler_feature_l2`, `sampler_feature_kl`, `sampler_feature_js`, and `sampler_feature_mmd`;
+- target controls: `target_no_target`, `target_online_sampler`, and momentum 0.90/0.95/0.99/0.995;
+- objective controls: `loss_mae_only` and contrastive weights 0.01/0.05/0.1/0.2;
+- topology controls: selected-nodes-only and 1/2/3-hop topology-assisted updates.
+
+The revised Wasserstein selector uses common support and shared normalization. When enabled, the representation objective uses node-wise InfoNCE in addition to prediction MAE.
+
+## Outputs
+
+Normal runs are stored under:
+
+```text
+res/<dataset>/<variant><timestamp>/
+```
+
+Reviewer experiments are stored under:
+
+```text
+res/reviewer/<dataset>/<variant><timestamp>/
+├── <variant>.log
+├── <year>/<best-validation-loss>.pkl
+└── metrics/summary.json
+```
+
+The structured summary contains the task-wise evaluation matrix `R[t,j]`, AIP-MAE, backward transfer based on negative MAE, forgetting, and per-period efficiency/storage statistics.
+
+Find all summaries with:
+
+```bash
+find res/reviewer -path '*/metrics/summary.json' -print
+```
+
+Aggregate repeated seeds:
+
+```bash
+python scripts/aggregate_reviewer_results.py \
+  --root res/reviewer \
+  --output res/reviewer/aggregate.json
+```
+
+The aggregate file reports the mean and sample standard deviation of AIP-MAE, forgetting, and BWT for every dataset/variant.
+
+## Experimental protocol notes
+
+- Each period is split chronologically into train/validation/test partitions.
+- Validation and test forward passes do not update TMRB state.
+- The EMA target stored in a checkpoint is preserved across periods.
+- The prediction backbone does not consume adjacency matrices. Adjacency is used only by topology-assisted update variants to expand selected nodes to local neighborhoods.
+- The selected-nodes-only graph ablation disables adjacency-based neighborhood expansion.
+- The current replay protocol reads historical traffic data for selection. Its accessed file size and adjacency metadata size are reported separately from compact memory state.
+
+See [the revision plan](paper/reviewer/revision_plan.md) for the reviewer-comment-to-experiment mapping and known protocol limitations.
+
+## Citation
+
+Citation information will be updated after publication. If this repository supports your research before then, please cite the accompanying CoMemNet manuscript and link this repository.
+
+## License
+
+No license file is currently included. Please contact the repository authors before redistributing the code or datasets.
+
+### Final main-result seeds and EAC baseline
+
+Run only the missing final CoMemNet seeds (the default checks seeds 0, 1, and 2 on all three datasets and runs only missing configurations):
+
+```bash
+GPU_ID=0 SEEDS="0 1 2" RESUME=1 bash scripts/run_final_main_seeds.sh
+```
+
+The dedicated mean/std table is written to `res/reviewer/final_main_multiseed.json`.
+
+Run the official EAC implementation with seed 0 on the same frozen chronological splits:
+
+```bash
+GPU_ID=0 SEED=0 RESUME=1 bash scripts/run_eac_baseline.sh
+```
+
+EAC summaries are written to `res/baseline/EAC/<dataset>/eac-0/metrics/summary.json`. The adapter reuses the exact CoMemNet split artifacts and exposes only the traffic channel expected by EAC. The official EAC model, MSE objective, optimizer, and hyperparameters remain unchanged.

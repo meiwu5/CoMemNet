@@ -42,17 +42,17 @@
         "in_channel":64,
         "out_channel":12,
         "top_k":12,
-        "dropout":0.2
+        "dropout":0.5
     },
     "logname": "no_TMRB",
     "strategy": "incremental",
     "init": true,
     "increase": true,
     "num_hops": 2,
-    
+
     "replay": true,
     "replay_strategy": "feature",
-    "replay_ratio":0.2,
+    "replay_ratio":0.05,
 
     "is_TMRB":false,
     "is_update":true,

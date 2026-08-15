@@ -69,7 +69,7 @@ def symlink(src, dst):
 def load_json_file(file_path):
     with open(file_path, "r") as f:
         s = f.read()
-        s = re.sub('\s',"", s)
+        s = re.sub(r'\s', "", s)
     return json.loads(s)
 
 def get_time_str():

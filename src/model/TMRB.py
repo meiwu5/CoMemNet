@@ -8,7 +8,7 @@ class GatedUpdateCell(nn.Module):
         self.input_dim = input_dim
         self.hidden_dim = hidden_dim
         self.input_to_hidden = nn.Linear(input_dim, hidden_dim)
-        
+
         self.W_r = nn.Linear(hidden_dim*2, hidden_dim)
         self.W_z = nn.Linear(hidden_dim*2, hidden_dim)
         self.W_t = nn.Linear(hidden_dim*2, hidden_dim)
@@ -31,7 +31,7 @@ class TMRB(nn.Module):
         self.out_dim = out_dim
         self.device = device
         self.TMRB_dropout = TMRB_dropout
-        self.is_update = is_update 
+        self.is_update = is_update
         self.GatedUpdateCell = GatedUpdateCell(out_dim, out_dim,self.TMRB_dropout).to(self.device)
         self.top_k = top_k
         self.select_k = select_k
@@ -39,13 +39,14 @@ class TMRB(nn.Module):
         self.init_hidden = nn.Parameter(
     nn.init.xavier_uniform_(torch.empty(input_dim, 1)))
         self.dorpout = nn.Dropout(TMRB_dropout)
-        
-    def forward(self, tem_emb, year, hidden_states_per_year):
+
+    def forward(self, tem_emb, year, hidden_states_per_year, memory_context_year=None):
         B, N, D = tem_emb.shape
         tem_emb = tem_emb.transpose(1,-1)
-        
-        if year - 1 in hidden_states_per_year.keys():
-            prev_hidden = hidden_states_per_year[year - 1]
+
+        context_year = year - 1 if memory_context_year is None else memory_context_year
+        if context_year in hidden_states_per_year.keys():
+            prev_hidden = hidden_states_per_year[context_year]
             prev_hidden = prev_hidden.expand(size = (N,*prev_hidden.shape)).transpose(0,1)
         else:
             prev_hidden = self.init_hidden
@@ -53,12 +54,12 @@ class TMRB(nn.Module):
 
         prev_hidden = prev_hidden.expand(size = (B,*prev_hidden.shape))
         prev_hidden = prev_hidden.squeeze(-1)
-        
+
         if self.select_k:
             time_step_diff = torch.abs(tem_emb - prev_hidden)
             _, top_k_indices = torch.topk(time_step_diff, k=self.top_k, dim=-1, largest=True, sorted=False)
             top_k_features = torch.gather(tem_emb, dim=2, index=top_k_indices)
-            
+
 
         else:
             top_k_indices = torch.randint(0, N, (B, self.top_k), device=tem_emb.device)
@@ -66,7 +67,7 @@ class TMRB(nn.Module):
 
         top_k_features = top_k_features.view(B, -1)
         time_step_input = self.mlp(top_k_features)
-        
+
         if self.is_update:
             prev_hidden_avg = torch.mean(prev_hidden, dim=2)
             prev_hidden_avg = prev_hidden_avg.view(B, -1)
