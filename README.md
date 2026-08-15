@@ -1,10 +1,26 @@
 # CoMemNet
 
-[中文说明](README_zh.md)
-
 CoMemNet is a continual traffic forecasting framework for evolving sensor networks. It combines an adjacency-free prediction backbone, online/EMA-target branches, drift-aware node selection, topology-assisted local updates, and a Node-Adaptive Temporal Memory Replay Buffer (TMRB-N).
 
 This repository also contains the major-revision experiment suite under `config/reviewer/` and `scripts/`. The suite evaluates controlled replay selectors, target-branch and momentum ablations, contrastive-loss variants, graph-dependency variants, continual-learning retention, and computational/storage costs.
+
+<p align="center">
+  <img src="assets/comemnet_overview.png" alt="CoMemNet architecture" width="900">
+</p>
+
+## Overview
+
+Traffic sensor networks do not remain fixed: sensors can be added, removed, or exhibit distribution shifts over time. CoMemNet is designed for this evolving-network setting. Rather than treating every period as an unrelated static forecasting problem, it carries forward learned representations and uses drift-aware selection to focus updates on newly introduced and changed nodes.
+
+The implementation separates the forecasting backbone from the optional topology-assisted update policy. The prediction forward pass is adjacency-free; graph information is used only to expand selected nodes to local neighborhoods in topology-aware update variants.
+
+## Key capabilities
+
+- **Continual updates for evolving sensor sets:** supports annual periods with changing node counts and persistent node identities.
+- **Drift-aware selection:** uses the revised Wasserstein selector with shared support and normalization to identify nodes requiring updates.
+- **Online/EMA-target branches:** supports stable target representations and explicit target-branch ablations.
+- **TMRB-N replay:** maintains temporal memory representations across periods while recording historical-access and memory statistics.
+- **Reproducible revision suite:** includes configurations and runners for static retraining, scaling, robustness, retention, and recent static-baseline comparisons.
 
 ## Release Resources
 
@@ -12,6 +28,14 @@ This repository also contains the major-revision experiment suite under `config/
 - Major-revision checkpoints, logs, configurations, and result summaries: `[REVISION_ARTIFACTS_GOOGLE_DRIVE_URL]`
 
 This Git repository intentionally excludes datasets, generated scale subsets, model weights, logs, and experiment outputs. `PEMSD3-stream` uses the public evolving-network release cited in the manuscript. `PEMSD4(L)` and `PEMSD8(M)` are processed from public CalTrans PeMS records; their processed data and documentation are provided through the dataset link above.
+
+## Scaling Study
+
+The revised experiments evaluate controlled node-scale variants of PEMSD4(L). The left panel reports the relative 12-step MAE reduction of CoMemNet against static retraining baselines; the right panel reports cumulative training-time savings. Negative MAE values at the smallest scale are retained rather than hidden.
+
+<p align="center">
+  <img src="assets/scaling_relative_advantage.png" alt="Relative accuracy and efficiency advantages across PEMSD4(L) scales" width="1000">
+</p>
 
 ## Repository layout
 
@@ -21,14 +45,14 @@ CoMemNet/
 ├── src/model/                      # backbone, TMRB, and replay selection
 ├── utils/                          # data loading, preprocessing, and metrics
 ├── config/                         # main, ablation, parameter, and reviewer configs
-├── data/                           # yearly traffic data, graphs, and cached splits
-├── baseline/                       # baseline implementations
+├── data/read_data.py               # data-download helper; datasets are external
+├── assets/                         # architecture and revision-result figures
 ├── scripts/
 │   ├── generate_reviewer_configs.py
 │   ├── run_reviewer_experiments.sh
-│   └── aggregate_reviewer_results.py
-├── paper/CoMemNet/                 # manuscript source and figures
-└── paper/reviewer/                 # reviewer comments and revision plan
+│   ├── run_round2_revision.sh
+│   └── setup_external_baselines.sh
+└── paper/reviewer/                 # reviewer-facing Markdown and plotting scripts
 ```
 
 ## Requirements
