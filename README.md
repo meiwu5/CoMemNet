@@ -24,8 +24,8 @@ The implementation separates the forecasting backbone from the optional topology
 
 ## Release Resources
 
-- Processed datasets and data-processing documentation: `[DATASET_GOOGLE_DRIVE_URL]`
-- Major-revision checkpoints, logs, configurations, and result summaries: `[REVISION_ARTIFACTS_GOOGLE_DRIVE_URL]`
+- Processed datasets and data-processing documentation: [CoMemNet dataset archive](https://drive.google.com/file/d/1SjsMsZIIWdKxzKxySROnb4Z84t1mZXXU/view?usp=drive_link)
+- Major-revision checkpoints, logs, configurations, and result summaries: [CoMemNet revision artifacts](https://drive.google.com/drive/folders/1ABJymMwVhtXJ0mY6m_1dWP1iwjz5X5kb?usp=drive_link)
 
 This Git repository intentionally excludes datasets, generated scale subsets, model weights, logs, and experiment outputs. `PEMSD3-stream` uses the public evolving-network release cited in the manuscript. `PEMSD4(L)` and `PEMSD8(M)` are processed from public CalTrans PeMS records; their processed data and documentation are provided through the dataset link above.
 
