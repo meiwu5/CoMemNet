@@ -29,12 +29,35 @@ The implementation separates the forecasting backbone from the optional topology
 
 This Git repository intentionally excludes datasets, generated scale subsets, model weights, logs, and experiment outputs. `PEMSD3-stream` uses the public evolving-network release cited in the manuscript. `PEMSD4(L)` and `PEMSD8(M)` are processed from public CalTrans PeMS records; their processed data and documentation are provided through the dataset link above.
 
-## Scaling Study
+## Main Results
 
-The revised experiments evaluate controlled node-scale variants of PEMSD4(L). The left panel reports the relative 12-step MAE reduction of CoMemNet against static retraining baselines; the right panel reports cumulative training-time savings. Negative MAE values at the smallest scale are retained rather than hidden.
+The table below reports final 12-step prediction results against the official STID static-retraining baseline and the official EAC continual baseline. Each entry is `MAE / RMSE`; CoMemNet reports the mean over three random seeds.
+
+| Dataset | CoMemNet | STID | EAC |
+|---|---:|---:|---:|
+| PEMSD3(S) | **13.70 / 23.21** | 13.79 / **22.65** | 21.37 / 32.22 |
+| PEMSD4(L) | **21.95 / 37.33** | 22.81 / 37.84 | 85.97 / 109.72 |
+| PEMSD8(M) | **16.89 / 28.18** | 17.65 / 28.51 | 19.55 / 30.91 |
+
+CoMemNet obtains lower 12-step MAE than STID across the three evolving-network datasets while remaining competitive in RMSE. The complete 3-step, 6-step, and 12-step results, together with per-seed summaries, are included in the revision-artifact release.
+
+## Component Ablation
+
+The compact TMRB-N ablation below reports annual-average 12-step MAE for the seed-0 controlled study. `w/o Select` replaces key-node selection with random selection; `w/o Update` removes temporal-state updating.
+
+| Variant | PEMSD3(S) | PEMSD4(L) | PEMSD8(M) |
+|---|---:|---:|---:|
+| w/o TMRB-N | 14.94 | 23.76 | 18.36 |
+| w/o Select | 13.82 | 22.14 | 17.33 |
+| w/o Update | 13.63 | 22.15 | 17.10 |
+| CoMemNet | **13.57** | **22.00** | **17.03** |
+
+## Update Efficiency
+
+Across evolving periods, CoMemNet updates only a subset of the current node set while retaining competitive 12-step MAE. Bars show the fraction of nodes updated by CoMemNet; lines compare the prediction error of CoMemNet with representative retrained and continual baselines.
 
 <p align="center">
-  <img src="assets/scaling_relative_advantage.png" alt="Relative accuracy and efficiency advantages across PEMSD4(L) scales" width="1000">
+  <img src="assets/update_efficiency_tradeoff.png" alt="Period-wise update scale and 12-step MAE across the evolving PeMS datasets" width="1000">
 </p>
 
 ## Repository layout
