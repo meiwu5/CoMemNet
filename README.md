@@ -8,10 +8,6 @@
   </a>
 </p>
 
-<p align="center">
-  <sub>Continual traffic forecasting for evolving sensor networks</sub>
-</p>
-
 > [!NOTE]
 > **Abstract**
 >
