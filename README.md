@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/CoMemNet-1A3A6E?style=for-the-badge&labelColor=1A3A6E" alt="CoMemNet" height="52" />
+  <img src="assets/comemnet_wordmark.svg" alt="CoMemNet" width="520" />
 </p>
 
 <p align="center">
   <a href="https://meiwu5.github.io/CoMemNet/">
-    <img src="https://img.shields.io/badge/Visit%20the%20CoMemNet%20Website-2060A8?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Visit the CoMemNet website" height="38" />
+    <img src="assets/website_banner.svg" alt="Visit the CoMemNet project website" width="620" />
   </a>
 </p>
 

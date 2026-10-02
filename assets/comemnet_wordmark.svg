@@ -1,0 +1,6 @@
+<svg width="900" height="180" viewBox="0 0 900 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <text x="450" y="122" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="112" font-weight="800" letter-spacing="-6">
+    <tspan fill="#1A3A6E">Co</tspan><tspan fill="#2060A8">Mem</tspan><tspan fill="#1A3A6E">Net</tspan>
+  </text>
+  <path d="M250 148H650" stroke="#2060A8" stroke-width="4" stroke-linecap="round"/>
+</svg>
