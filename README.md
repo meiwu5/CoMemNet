@@ -4,17 +4,23 @@
 
 <p align="center">
   <a href="https://meiwu5.github.io/CoMemNet/">
-    <img src="assets/website_banner.svg" alt="Visit the CoMemNet project website" width="620" />
+    <img src="assets/website_banner.svg" alt="Website" width="680" />
   </a>
 </p>
 
-## Abstract
+<p align="center">
+  <sub>Continual traffic forecasting for evolving sensor networks</sub>
+</p>
 
-Traffic sensor networks evolve as sensors are added, removed, and undergo distribution shifts, making it difficult to preserve useful historical knowledge while adapting to the current period. CoMemNet is a continual traffic forecasting framework for this setting. Its forecasting backbone is adjacency-free: the online branch is optimized using the current-period prediction objective, while an EMA Target branch provides a stop-gradient reference for drift scoring rather than serving as an additional prediction branch. The Drift Sampler combines newly added sensors with drift-sensitive shared sensors and can optionally expand the selected update set through bounded adjacency neighborhoods. Node-Adaptive Temporal Memory Replay (TMRB-N) reuses compact temporal states across periods without jointly loading all historical raw training sequences.
+> [!NOTE]
+> **Abstract**
+>
+> Traffic sensor networks evolve as sensors are added, removed, and undergo distribution shifts, making it difficult to preserve useful historical knowledge while adapting to the current period. CoMemNet is a continual traffic forecasting framework for this setting. Its forecasting backbone is adjacency-free: the online branch is optimized using the current-period prediction objective, while an EMA Target branch provides a stop-gradient reference for drift scoring rather than serving as an additional prediction branch. The Drift Sampler combines newly added sensors with drift-sensitive shared sensors and can optionally expand the selected update set through bounded adjacency neighborhoods. Node-Adaptive Temporal Memory Replay (TMRB-N) reuses compact temporal states across periods without jointly loading all historical raw training sequences.
+>
+> Experiments on three real multi-period PeMS datasets include three-seed evaluation, static-retraining and continual baselines, controlled sampler and update-policy studies, continual-learning metrics, robustness tests, and resource accounting. CoMemNet maintains competitive prediction accuracy under bounded shared-node updating, while its accuracy and cumulative training-time advantages over current-period retraining become clearer as the evolving network expands.
 
-Experiments on three real multi-period PeMS datasets include three-seed evaluation, static-retraining and continual baselines, controlled sampler and update-policy studies, continual-learning metrics, robustness tests, and resource accounting. CoMemNet maintains competitive prediction accuracy under bounded shared-node updating, while its accuracy and cumulative training-time advantages over current-period retraining become clearer as the evolving network expands.
-
-This repository contains the implementation and the major-revision experiment suite under `config/reviewer/` and `scripts/`.
+> [!TIP]
+> This repository contains the implementation and the major-revision experiment suite under `config/reviewer/` and `scripts/`.
 
 <p align="center">
   <img src="assets/comemnet_overview.png" alt="CoMemNet architecture" width="900">
@@ -36,19 +42,21 @@ The implementation separates the forecasting backbone from the optional topology
 
 ## Release Resources
 
-- Processed datasets and data-processing documentation: [CoMemNet dataset archive](https://drive.google.com/file/d/1SjsMsZIIWdKxzKxySROnb4Z84t1mZXXU/view?usp=drive_link)
-- Major-revision checkpoints, logs, configurations, and result summaries: [CoMemNet revision artifacts](https://drive.google.com/drive/folders/1ABJymMwVhtXJ0mY6m_1dWP1iwjz5X5kb?usp=drive_link)
+| Resource | Access |
+|---|---|
+| Processed datasets and data-processing documentation | [CoMemNet dataset archive](https://drive.google.com/file/d/1SjsMsZIIWdKxzKxySROnb4Z84t1mZXXU/view?usp=drive_link) |
+| Major-revision checkpoints, logs, configurations, and result summaries | [CoMemNet revision artifacts](https://drive.google.com/drive/folders/1ABJymMwVhtXJ0mY6m_1dWP1iwjz5X5kb?usp=drive_link) |
 
 This Git repository intentionally excludes datasets, generated scale subsets, model weights, logs, and experiment outputs. `PEMSD3-stream` uses the public evolving-network release cited in the manuscript. `PEMSD4(L)` and `PEMSD8(M)` are processed from public CalTrans PeMS records; their processed data and documentation are provided through the dataset link above.
 
 ## Evaluation Coverage
 
-The revision evaluation is designed to test more than one accuracy number:
-
-- **Forecasting accuracy:** 15-, 30-, and 60-minute annual-average MAE/RMSE/MAPE across three evolving PeMS benchmarks, compared with static retraining and continual baselines.
-- **Update efficiency and scaling:** period-wise selected-node scale, prediction error, running time, and relative advantage as the evolving PEMS D4 network grows.
-- **Component and policy controls:** drift sampling, TMRB-N, replay, target branch, momentum, alternative samplers/distances, and 1/2/3-hop local-update variants.
-- **Continual-learning and robustness checks:** current-period MAE, AIP, BWT, forgetting, missing-sensor/noise robustness, and memory/storage accounting.
+| Focus | What is evaluated |
+|---|---|
+| **Forecasting accuracy** | 15-, 30-, and 60-minute annual-average MAE/RMSE/MAPE across three evolving PeMS benchmarks, compared with static retraining and continual baselines. |
+| **Update efficiency & scaling** | Period-wise selected-node scale, prediction error, running time, and relative advantage as the evolving PEMS D4 network grows. |
+| **Components & policy controls** | Drift sampling, TMRB-N, replay, target branch, momentum, alternative samplers/distances, and 1/2/3-hop local-update variants. |
+| **Continual learning & robustness** | Current-period MAE, AIP, BWT, forgetting, missing-sensor/noise robustness, and memory/storage accounting. |
 
 ## Main Results
 
