@@ -1,0 +1,25 @@
+{"source":"TCSS_CoMemNet.tex, revision 2","main":{
+ "PEMSD3(S)":{"highlight":"13.57","rows":[
+ {"protocol":"Retrained","model":"STID-retrained","m15":{"mae":"11.88","rmse":"19.36","mape":"16.67"},"m30":{"mae":"12.54","rmse":"20.57","mape":"18.27"},"m60":{"mae":"13.79","rmse":"22.65","mape":"21.63"},"time":"—"},
+ {"protocol":"Continual","model":"Expansible-STKEC","m15":{"mae":"12.64","rmse":"20.45","mape":"17.68"},"m30":{"mae":"13.78","rmse":"22.51","mape":"18.98"},"m60":{"mae":"16.07","rmse":"26.44","mape":"22.23"},"time":"282.90 / 1.86"},
+ {"protocol":"Continual","model":"TrafficStream","m15":{"mae":"12.75","rmse":"20.78","mape":"17.43"},"m30":{"mae":"13.92","rmse":"22.80","mape":"18.75"},"m60":{"mae":"16.27","rmse":"26.80","mape":"22.90"},"time":"306.97 / 1.76"},
+ {"protocol":"Continual","model":"EAC","m15":{"mae":"18.67","rmse":"27.44","mape":"41.73"},"m30":{"mae":"19.31","rmse":"28.65","mape":"40.48"},"m60":{"mae":"21.37","rmse":"32.22","mape":"42.46"},"time":"—"},
+ {"protocol":"Continual","model":"CoMemNet","m15":{"mae":"11.48","rmse":"18.89","mape":"16.54"},"m30":{"mae":"12.24","rmse":"20.40","mape":"17.31"},"m60":{"mae":"13.57","rmse":"22.94","mape":"18.80"},"time":"103.66 / 0.30"}]},
+ "PEMSD4(L)":{"highlight":"22.00","rows":[
+ {"protocol":"Retrained","model":"STID-retrained","m15":{"mae":"18.60","rmse":"30.99","mape":"12.71"},"m30":{"mae":"20.11","rmse":"33.63","mape":"14.09"},"m60":{"mae":"22.81","rmse":"37.84","mape":"16.76"},"time":"—"},
+ {"protocol":"Continual","model":"Expansible-STModel","m15":{"mae":"20.20","rmse":"32.16","mape":"15.54"},"m30":{"mae":"22.25","rmse":"35.73","mape":"16.98"},"m60":{"mae":"26.42","rmse":"42.26","mape":"20.79"},"time":"352.14 / 1.88"},
+ {"protocol":"Continual","model":"EAC","m15":{"mae":"84.33","rmse":"107.75","mape":"130.36"},"m30":{"mae":"84.95","rmse":"108.35","mape":"129.98"},"m60":{"mae":"85.97","rmse":"109.72","mape":"129.85"},"time":"—"},
+ {"protocol":"Continual","model":"CoMemNet","m15":{"mae":"17.98","rmse":"30.44","mape":"12.92"},"m30":{"mae":"19.41","rmse":"33.05","mape":"13.92"},"m60":{"mae":"22.00","rmse":"37.38","mape":"15.86"},"time":"228.60 / 0.65"}]},
+ "PEMSD8(M)":{"highlight":"17.03","rows":[
+ {"protocol":"Retrained","model":"STID-retrained","m15":{"mae":"14.27","rmse":"23.09","mape":"16.82"},"m30":{"mae":"15.49","rmse":"25.14","mape":"19.72"},"m60":{"mae":"17.65","rmse":"28.51","mape":"25.28"},"time":"—"},
+ {"protocol":"Continual","model":"Expansible-STKEC","m15":{"mae":"15.37","rmse":"24.35","mape":"15.83"},"m30":{"mae":"16.80","rmse":"26.96","mape":"17.15"},"m60":{"mae":"19.60","rmse":"31.68","mape":"19.78"},"time":"286.86 / 1.60"},
+ {"protocol":"Continual","model":"EAC","m15":{"mae":"16.10","rmse":"24.81","mape":"21.55"},"m30":{"mae":"17.22","rmse":"26.92","mape":"22.64"},"m60":{"mae":"19.55","rmse":"30.91","mape":"25.37"},"time":"—"},
+ {"protocol":"Continual","model":"CoMemNet","m15":{"mae":"13.88","rmse":"22.70","mape":"15.28"},"m30":{"mae":"15.01","rmse":"24.83","mape":"16.12"},"m60":{"mae":"17.03","rmse":"28.41","mape":"17.82"},"time":"92.03 / 0.23"}]}},
+ "ablation":{"drift":{
+ "PEMSD3(S)":[{"name":"Static CoMemNet","mae":"35.81","rmse":"51.23","mape":"33.11"},{"name":"Retrained CoMemNet","mae":"13.00","rmse":"21.81","mape":"18.59"},{"name":"w/o Increase","mae":"14.17","rmse":"24.09","mape":"21.61"},{"name":"w/o Drifted Shared Nodes","mae":"14.65","rmse":"24.67","mape":"19.39"},{"name":"CoMemNet","mae":"13.57","rmse":"22.94","mape":"18.80"}],
+ "PEMSD4(L)":[{"name":"Static CoMemNet","mae":"35.29","rmse":"52.75","mape":"23.55"},{"name":"Retrained CoMemNet","mae":"21.62","rmse":"36.84","mape":"15.37"},{"name":"w/o Increase","mae":"22.50","rmse":"38.07","mape":"15.90"},{"name":"w/o Drifted Shared Nodes","mae":"22.33","rmse":"37.71","mape":"16.20"},{"name":"CoMemNet","mae":"22.00","rmse":"37.38","mape":"15.86"}],
+ "PEMSD8(M)":[{"name":"Static CoMemNet","mae":"34.83","rmse":"50.10","mape":"25.56"},{"name":"Retrained CoMemNet","mae":"15.82","rmse":"26.37","mape":"18.50"},{"name":"w/o Increase","mae":"17.48","rmse":"29.22","mape":"19.86"},{"name":"w/o Drifted Shared Nodes","mae":"18.47","rmse":"30.27","mape":"20.00"},{"name":"CoMemNet","mae":"17.03","rmse":"28.41","mape":"17.82"}]},
+ "tmrb":{
+ "PEMSD3(S)":[{"name":"w/o TMRB-N","mae":"14.94","rmse":"25.38","mape":"19.76"},{"name":"w/o Select","mae":"13.82","rmse":"23.26","mape":"19.33"},{"name":"w/o Update","mae":"13.63","rmse":"23.09","mape":"18.51"},{"name":"CoMemNet","mae":"13.57","rmse":"22.94","mape":"18.80"}],
+ "PEMSD4(L)":[{"name":"w/o TMRB-N","mae":"23.76","rmse":"39.59","mape":"17.29"},{"name":"w/o Select","mae":"22.14","rmse":"37.56","mape":"15.85"},{"name":"w/o Update","mae":"22.15","rmse":"37.40","mape":"16.66"},{"name":"CoMemNet","mae":"22.00","rmse":"37.38","mape":"15.86"}],
+ "PEMSD8(M)":[{"name":"w/o TMRB-N","mae":"18.36","rmse":"30.61","mape":"20.06"},{"name":"w/o Select","mae":"17.33","rmse":"28.82","mape":"18.96"},{"name":"w/o Update","mae":"17.10","rmse":"28.59","mape":"18.29"},{"name":"CoMemNet","mae":"17.03","rmse":"28.41","mape":"17.82"}]}}}
