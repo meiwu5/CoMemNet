@@ -1,4 +1,12 @@
-# CoMemNet
+<p align="center">
+  <img src="https://img.shields.io/badge/CoMemNet-1A3A6E?style=for-the-badge&labelColor=1A3A6E" alt="CoMemNet" height="52" />
+</p>
+
+<p align="center">
+  <a href="https://meiwu5.github.io/CoMemNet/">
+    <img src="https://img.shields.io/badge/Visit%20the%20CoMemNet%20Website-2060A8?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Visit the CoMemNet website" height="38" />
+  </a>
+</p>
 
 CoMemNet is a continual traffic forecasting framework for evolving sensor networks. It combines an adjacency-free prediction backbone, online/EMA-target branches, drift-aware node selection, topology-assisted local updates, and a Node-Adaptive Temporal Memory Replay Buffer (TMRB-N).
 
