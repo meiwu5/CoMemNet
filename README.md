@@ -8,9 +8,13 @@
   </a>
 </p>
 
-CoMemNet is a continual traffic forecasting framework for evolving sensor networks. It combines an adjacency-free prediction backbone, online/EMA-target branches, drift-aware node selection, topology-assisted local updates, and a Node-Adaptive Temporal Memory Replay Buffer (TMRB-N).
+## Abstract
 
-This repository also contains the major-revision experiment suite under `config/reviewer/` and `scripts/`. The suite evaluates controlled replay selectors, target-branch and momentum ablations, contrastive-loss variants, graph-dependency variants, continual-learning retention, and computational/storage costs.
+Traffic sensor networks evolve as sensors are added, removed, and undergo distribution shifts, making it difficult to preserve useful historical knowledge while adapting to the current period. CoMemNet is a continual traffic forecasting framework for this setting. Its forecasting backbone is adjacency-free: the online branch is optimized using the current-period prediction objective, while an EMA Target branch provides a stop-gradient reference for drift scoring rather than serving as an additional prediction branch. The Drift Sampler combines newly added sensors with drift-sensitive shared sensors and can optionally expand the selected update set through bounded adjacency neighborhoods. Node-Adaptive Temporal Memory Replay (TMRB-N) reuses compact temporal states across periods without jointly loading all historical raw training sequences.
+
+Experiments on three real multi-period PeMS datasets include three-seed evaluation, static-retraining and continual baselines, controlled sampler and update-policy studies, continual-learning metrics, robustness tests, and resource accounting. CoMemNet maintains competitive prediction accuracy under bounded shared-node updating, while its accuracy and cumulative training-time advantages over current-period retraining become clearer as the evolving network expands.
+
+This repository contains the implementation and the major-revision experiment suite under `config/reviewer/` and `scripts/`.
 
 <p align="center">
   <img src="assets/comemnet_overview.png" alt="CoMemNet architecture" width="900">
@@ -229,7 +233,7 @@ Important experiment groups include:
 - objective controls: `loss_mae_only` and contrastive weights 0.01/0.05/0.1/0.2;
 - topology controls: selected-nodes-only and 1/2/3-hop topology-assisted updates.
 
-The revised Wasserstein selector uses common support and shared normalization. When enabled, the representation objective uses node-wise InfoNCE in addition to prediction MAE.
+The revised Wasserstein selector uses common support and shared normalization. The released CoMemNet configuration optimizes prediction MAE only; contrastive-weight configurations under `config/reviewer/` are controlled ablations rather than part of the final method.
 
 ## Outputs
 
