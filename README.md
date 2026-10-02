@@ -41,6 +41,15 @@ The implementation separates the forecasting backbone from the optional topology
 
 This Git repository intentionally excludes datasets, generated scale subsets, model weights, logs, and experiment outputs. `PEMSD3-stream` uses the public evolving-network release cited in the manuscript. `PEMSD4(L)` and `PEMSD8(M)` are processed from public CalTrans PeMS records; their processed data and documentation are provided through the dataset link above.
 
+## Evaluation Coverage
+
+The revision evaluation is designed to test more than one accuracy number:
+
+- **Forecasting accuracy:** 15-, 30-, and 60-minute annual-average MAE/RMSE/MAPE across three evolving PeMS benchmarks, compared with static retraining and continual baselines.
+- **Update efficiency and scaling:** period-wise selected-node scale, prediction error, running time, and relative advantage as the evolving PEMS D4 network grows.
+- **Component and policy controls:** drift sampling, TMRB-N, replay, target branch, momentum, alternative samplers/distances, and 1/2/3-hop local-update variants.
+- **Continual-learning and robustness checks:** current-period MAE, AIP, BWT, forgetting, missing-sensor/noise robustness, and memory/storage accounting.
+
 ## Main Results
 
 The table below reports final 12-step prediction results against the official STID static-retraining baseline and the official EAC continual baseline. Each entry is `MAE / RMSE`; CoMemNet reports the mean over three random seeds.
@@ -233,7 +242,7 @@ Important experiment groups include:
 - objective controls: `loss_mae_only` and contrastive weights 0.01/0.05/0.1/0.2;
 - topology controls: selected-nodes-only and 1/2/3-hop topology-assisted updates.
 
-The revised Wasserstein selector uses common support and shared normalization. The released CoMemNet configuration optimizes prediction MAE only; contrastive-weight configurations under `config/reviewer/` are controlled ablations rather than part of the final method.
+The revised Wasserstein selector uses common support and shared normalization. When enabled, the representation objective uses node-wise InfoNCE in addition to prediction MAE.
 
 ## Outputs
 

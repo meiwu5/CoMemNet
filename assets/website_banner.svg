@@ -1,10 +1,10 @@
 <svg width="900" height="132" viewBox="0 0 900 132" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect x="3" y="3" width="894" height="126" rx="18" fill="#1A3A6E"/>
-  <rect x="3" y="3" width="894" height="126" rx="18" stroke="#2060A8" stroke-width="6"/>
-  <circle cx="88" cy="66" r="24" stroke="#90C2EE" stroke-width="3"/>
-  <circle cx="88" cy="66" r="7" fill="#90C2EE"/>
-  <path d="M111 66H139" stroke="#90C2EE" stroke-width="3" stroke-linecap="round"/>
-  <text x="170" y="57" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" letter-spacing="3">PROJECT WEBSITE</text>
-  <text x="170" y="91" fill="#BFDDF7" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Explore CoMemNet interactively</text>
-  <path d="M821 53L852 66L821 79" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="3" width="894" height="126" rx="18" fill="#E8F3FE"/>
+  <rect x="3" y="3" width="894" height="126" rx="18" stroke="#8BBBE8" stroke-width="6"/>
+  <circle cx="88" cy="66" r="24" stroke="#2060A8" stroke-width="3"/>
+  <circle cx="88" cy="66" r="7" fill="#2060A8"/>
+  <path d="M111 66H139" stroke="#2060A8" stroke-width="3" stroke-linecap="round"/>
+  <text x="170" y="57" fill="#2060A8" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" letter-spacing="3">PROJECT WEBSITE</text>
+  <text x="170" y="91" fill="#1A3A6E" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Explore CoMemNet interactively</text>
+  <path d="M821 53L852 66L821 79" stroke="#2060A8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
