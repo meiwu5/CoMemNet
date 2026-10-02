@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://meiwu5.github.io/CoMemNet/">
-    <img src="assets/website_cta.svg" alt="Website" width="460" />
+    <img src="assets/website_minimal.svg" alt="Website" width="320" />
   </a>
 </p>
 
