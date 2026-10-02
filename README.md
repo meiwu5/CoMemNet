@@ -1,10 +1,8 @@
 <p align="center">
   <img src="assets/comemnet_wordmark.svg" alt="CoMemNet" width="520" />
-</p>
-
-<p align="center">
+  <br />
   <a href="https://meiwu5.github.io/CoMemNet/">
-    <img src="assets/website_minimal.svg" alt="Website" width="320" />
+    <img src="assets/website_cta.svg" alt="Website" width="430" />
   </a>
 </p>
 
